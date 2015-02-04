@@ -1,10 +1,10 @@
-var validation = require('commonform-validation');
+var validate = require('commonform-validate');
 
-var isString = function(argument) {
+var string = function(argument) {
   return typeof argument === 'string';
 };
 
-var isSubForm = function(argument) {
+var subForm = function(argument) {
   return argument.hasOwnProperty('form');
 };
 
@@ -18,20 +18,20 @@ var compileElement = function(element, values, summaryNumberings) {
     return element;
 
   // Term use
-  } else if (validation.isUse(element)) {
+  } else if (validate.use(element)) {
     return element.use;
 
   // Sub-form
-  } else if (isSubForm(element)) {
+  } else if (subForm(element)) {
     element.form.content = compileContent(element.form.content);
     return element;
 
   // Definition
-  } else if (validation.isDefinition(element)) {
+  } else if (validate.definition(element)) {
     return element;
 
   // Reference
-  } else if (validation.isReference(element)) {
+  } else if (validate.reference(element)) {
     var summary = element.reference;
 
     // Resolvable
@@ -60,7 +60,7 @@ var compileElement = function(element, values, summaryNumberings) {
     }
 
   // Field
-  } else if (validation.isField(element)) {
+  } else if (validate.field(element)) {
     var field = element.field;
     if (values.hasOwnProperty(field)) {
       return values[field];
@@ -86,7 +86,7 @@ compileContent = function(content, values, summaryNumberings) {
     .reduce(function(content, element, index) {
       var length = content.length;
       var last = content[length - 1];
-      if (index > 0 && isString(element) && isString(last)) {
+      if (index > 0 && string(element) && string(last)) {
         content[length - 1] = last + element;
         return content;
       } else {
@@ -100,11 +100,11 @@ var number = function(content, summaryNumberings, numbering) {
   var elementCounts = [null];
 
   content.forEach(function(element, index, array) {
-    if (isSubForm(element)) {
+    if (subForm(element)) {
       var newNumbering;
 
       // Part of a previously started series
-      if (index > 0 && isSubForm(array[index - 1])) {
+      if (index > 0 && subForm(array[index - 1])) {
         ++elementCounts[seriesNumber];
         newNumbering = numbering.concat({
           series: {number: seriesNumber},
@@ -150,7 +150,7 @@ var number = function(content, summaryNumberings, numbering) {
 };
 
 module.exports = function(project) {
-  if (!validation.isProject(project)) {
+  if (!validate.project(project)) {
     throw new Error('Invalid project');
   }
 
