@@ -106,7 +106,7 @@ var number = function(content, summaryNumberings, parentNumbering) {
       var newNumbering;
 
       // Part of a previously started series
-      if (index > 0 && subForm(array[index - 1])) {
+      if (index > 0 && array[index - 1].hasOwnProperty('form')) {
         ++elementCounts[seriesNumber];
         newNumbering = parentNumbering.concat({
           series: {number: seriesNumber},
