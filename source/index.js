@@ -171,4 +171,4 @@ module.exports = function(project) {
   return project;
 };
 
-module.exports.version = '0.0.1';
+module.exports.version = '0.1.0';
