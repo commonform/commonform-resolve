@@ -23,7 +23,9 @@ var compileElement = function(element, values, summaryNumberings) {
 
   // Sub-form
   } else if (subForm(element)) {
-    element.form.content = compileContent(element.form.content);
+    element.form.content = compileContent(
+      element.form.content, values, summaryNumberings
+    );
     return element;
 
   // Definition
@@ -95,7 +97,7 @@ compileContent = function(content, values, summaryNumberings) {
     }, []);
 };
 
-var number = function(content, summaryNumberings, numbering) {
+var number = function(content, summaryNumberings, parentNumbering) {
   var seriesNumber = 0;
   var elementCounts = [null];
 
@@ -106,7 +108,7 @@ var number = function(content, summaryNumberings, numbering) {
       // Part of a previously started series
       if (index > 0 && subForm(array[index - 1])) {
         ++elementCounts[seriesNumber];
-        newNumbering = numbering.concat({
+        newNumbering = parentNumbering.concat({
           series: {number: seriesNumber},
           element: {number: elementCounts[seriesNumber]}
         });
@@ -115,7 +117,7 @@ var number = function(content, summaryNumberings, numbering) {
       } else {
         elementCounts.push(1);
         seriesNumber++;
-        newNumbering = numbering.concat({
+        newNumbering = parentNumbering.concat({
           series: {number: seriesNumber},
           element: {number: 1}
         });
@@ -132,6 +134,9 @@ var number = function(content, summaryNumberings, numbering) {
           summaryNumberings[summary].push(newNumbering);
         }
       }
+
+      // Number sub-forms
+      number(element.form.content, summaryNumberings, newNumbering);
     }
   });
 

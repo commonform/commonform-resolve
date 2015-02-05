@@ -1,6 +1,6 @@
 /* jshint mocha: true */
 var expect = require('chai').expect;
-var compile = require('..');
+var resolve = require('..');
 
 var A_FORM = {content:['A']};
 
@@ -22,40 +22,40 @@ var testProject = function(content, values) {
 describe('compilation', function() {
   it('requires a valid project', function() {
     expect(function() {
-      compile({});
+      resolve({});
     }).to.throw('Invalid project');
   });
 
   describe('of strings', function() {
     it('passes them through', function() {
-      expect(compile(testProject(['A'])).form.content)
+      expect(resolve(testProject(['A'])).form.content)
         .to.eql(['A']);
     });
   });
 
   describe('of term uses', function() {
     it('converts them to text', function() {
-      expect(compile(testProject([{use: 'A'}])).form.content)
+      expect(resolve(testProject([{use: 'A'}])).form.content)
         .to.eql(['A']);
     });
   });
 
   describe('of term definitions', function() {
     it('passes them through', function() {
-      expect(compile(testProject([{definition: 'A'}])).form.content)
+      expect(resolve(testProject([{definition: 'A'}])).form.content)
         .to.eql([{definition: 'A'}]);
     });
   });
 
   describe('of fields', function() {
     it('replaces them with their values', function() {
-      expect(compile(testProject([{field: 'A'}], {A:'1'})).form.content)
+      expect(resolve(testProject([{field: 'A'}], {A:'1'})).form.content)
         .to.eql(['1']);
     });
 
     describe('without values', function() {
       it('replaces them with a blank', function() {
-        expect(compile(testProject([{field: 'A'}])).form.content)
+        expect(resolve(testProject([{field: 'A'}])).form.content)
           .to.eql([{blank:'A'}]);
       });
     });
@@ -64,7 +64,7 @@ describe('compilation', function() {
   describe('of references', function() {
     it('replaces summaries with numberings', function() {
       var numbering = [{series: xOfy(1, 1), element: xOfy(1, 1)}];
-      expect(compile(testProject([
+      expect(resolve(testProject([
         {summary: 'A', form: A_FORM},
         {reference: 'A'}
       ])).form.content[1])
@@ -73,14 +73,14 @@ describe('compilation', function() {
 
     describe('to non-existent provisions', function() {
       it('marks them broken', function() {
-        expect(compile(testProject([{reference: 'A'}])).form.content)
+        expect(resolve(testProject([{reference: 'A'}])).form.content)
           .to.eql([{reference: 'A', broken: true}]);
       });
     });
 
     describe('to multiple provisions', function() {
       it('flags them ambiguous', function() {
-        expect(compile(testProject([
+        expect(resolve(testProject([
           {summary: 'A', form: A_FORM},
           {summary: 'A', form: A_FORM},
           {reference: 'A'}
@@ -98,31 +98,57 @@ describe('compilation', function() {
   });
 
   it('concatenates strings and objects resolved to string', function() {
-    expect(compile(testProject(['A', {use: 'B'}])).form.content)
+    expect(resolve(testProject(['A', {use: 'B'}])).form.content)
       .to.eql(['AB']);
-    expect(compile(testProject([{use: 'A'}, 'B'])).form.content)
+    expect(resolve(testProject([{use: 'A'}, 'B'])).form.content)
       .to.eql(['AB']);
   });
 
   describe('numbers', function() {
     it('sub-forms without summaries', function() {
-      expect(compile(testProject([
-        {summary: 'A', form: A_FORM},
-        {form: A_FORM},
-        {summary: 'A', form: A_FORM}
+      expect(resolve(testProject([
+        {summary: 'First', form: A_FORM},
+        {
+          form:{
+            content: [
+              {summary: 'First Inner', form: A_FORM},
+              {summary: 'Last Inner', form: A_FORM}
+            ]
+          }
+        },
+        {summary: 'Last', form: A_FORM}
       ])).form.content)
         .to.eql([
           {
-            summary: 'A',
+            summary: 'First',
             form: A_FORM,
             numbering: [{series: xOfy(1, 1), element: xOfy(1, 3)}]
           },
           {
-            form: A_FORM,
-            numbering: [{series: xOfy(1, 1), element: xOfy(2, 3)}]
+            numbering: [{series: xOfy(1, 1), element: xOfy(2, 3)}],
+            form: {
+              content: [
+                {
+                  summary: 'First Inner',
+                  form: A_FORM,
+                  numbering: [
+                    {series: xOfy(1, 1), element: xOfy(2, 3)},
+                    {series: xOfy(1, 1), element: xOfy(1, 2)}
+                  ]
+                },
+                {
+                  summary: 'Last Inner',
+                  form: A_FORM,
+                  numbering: [
+                    {series: xOfy(1, 1), element: xOfy(2, 3)},
+                    {series: xOfy(1, 1), element: xOfy(2, 2)}
+                  ]
+                }
+              ]
+            }
           },
           {
-            summary: 'A',
+            summary: 'Last',
             form: A_FORM,
             numbering: [{series: xOfy(1, 1), element: xOfy(3, 3)}]
           }
