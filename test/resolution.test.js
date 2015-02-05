@@ -104,6 +104,20 @@ describe('compilation', function() {
       .to.eql(['AB']);
   });
 
+  it('preserves conspicuous flags', function() {
+    expect(resolve(testProject([
+      {summary: 'First', form: {content: ['test'], conspicuous: 'true'}}
+    ])).form.content)
+      .to.eql([{
+        summary: 'First',
+        form: {
+          content: ['test'],
+          conspicuous: 'true'
+        },
+        numbering: [{series: xOfy(1, 1), element: xOfy(1, 1)}]
+      }]);
+  });
+
   describe('numbers', function() {
     it('sub-forms without summaries', function() {
       expect(resolve(testProject([
