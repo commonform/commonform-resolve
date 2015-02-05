@@ -6,7 +6,7 @@
   },
   "description": "resolve Common Form content objects",
   "dependencies": {
-    "commonform": "0.1.x"
+    "commonform-validate": "0.1.x"
   },
   "devDependencies": {
     "chai": "^1.10.0",
