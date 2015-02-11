@@ -1,10 +1,12 @@
 {
+  "name": "commonform-resolve",
+  "description": "resolve Common Form content objects",
+  "version": "0.1.1",
   "author": {
     "name": "Kyle E. Mitchell",
     "email": "kyle@kemitchell.com",
     "url": "http://kemitchell.com/"
   },
-  "description": "resolve Common Form content objects",
   "dependencies": {
     "commonform-group-series": "0.1.x",
     "commonform-validate": "0.1.x"
@@ -27,18 +29,16 @@
   ],
   "license": "Apache-2.0",
   "main": "source/index",
-  "name": "commonform-resolve",
   "repository": {
     "type": "git",
     "url": "https://github.com/commonform/commonform-resolve.git"
   },
   "scripts": {
     "check": "check-versions --check-module",
-    "pre-commit": "npm run lint && npm run check && npm run coverage",
-    "lint": "jshint source test && jscs source test",
     "coverage": "istanbul cover _mocha && istanbul check-coverage coverage/coverage.json",
+    "lint": "jshint source test && jscs source test",
+    "pre-commit": "npm run lint && npm run check && npm run coverage",
     "test": "mocha",
     "travis-ci": "npm run pre-commit"
-  },
-  "version": "0.1.1"
+  }
 }
