@@ -6,6 +6,7 @@
   },
   "description": "resolve Common Form content objects",
   "dependencies": {
+    "commonform-group-series": "0.1.x",
     "commonform-validate": "0.1.x"
   },
   "devDependencies": {

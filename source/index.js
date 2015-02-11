@@ -1,4 +1,5 @@
 var validate = require('commonform-validate');
+var group = require('commonform-group-series');
 
 var string = function(argument) {
   return typeof argument === 'string';
@@ -97,51 +98,41 @@ compileContent = function(content, values, summaryNumberings) {
     }, []);
 };
 
-var number = function(content, summaryNumberings, parentNumbering) {
+var number = function(form, summaryNumberings, parentNumbering) {
   var seriesNumber = 0;
   var elementCounts = [null];
 
-  content.forEach(function(element, index, array) {
-    if (subForm(element)) {
-      var newNumbering;
-
-      // Part of a previously started series
-      if (index > 0 && array[index - 1].hasOwnProperty('form')) {
+  group(form)
+    .filter(function(group) {
+      return group.type === 'series';
+    })
+    .forEach(function(series, seriesIndex) {
+      seriesNumber = seriesIndex + 1;
+      elementCounts.push(0);
+      series.content.forEach(function(subForm, subFormIndex) {
         ++elementCounts[seriesNumber];
-        newNumbering = parentNumbering.concat({
+        var newNumbering = parentNumbering.concat({
           series: {number: seriesNumber},
-          element: {number: elementCounts[seriesNumber]}
+          element: {number: subFormIndex + 1}
         });
+        subForm.numbering = newNumbering;
 
-      // New series
-      } else {
-        elementCounts.push(1);
-        seriesNumber++;
-        newNumbering = parentNumbering.concat({
-          series: {number: seriesNumber},
-          element: {number: 1}
-        });
-      }
-
-      element.numbering = newNumbering;
-
-      // Save summary-to-numbering mapping
-      if (element.hasOwnProperty('summary')) {
-        var summary = element.summary;
-        if (!summaryNumberings.hasOwnProperty(summary)) {
-          summaryNumberings[summary] = [newNumbering];
-        } else {
-          summaryNumberings[summary].push(newNumbering);
+        // Save summary-to-numbering mapping
+        if (subForm.hasOwnProperty('summary')) {
+          var summary = subForm.summary;
+          if (!(summary in summaryNumberings)) {
+            summaryNumberings[summary] = [newNumbering];
+          } else {
+            summaryNumberings[summary].push(newNumbering);
+          }
         }
-      }
 
-      // Number sub-forms
-      number(element.form.content, summaryNumberings, newNumbering);
-    }
-  });
+        number(subForm.form, summaryNumberings, newNumbering);
+      });
+    });
 
   // Add .of to .series and .element
-  content.forEach(function(element) {
+  form.content.forEach(function(element) {
     if (element.hasOwnProperty('numbering')) {
       var numbering = element.numbering;
       var last = numbering[numbering.length - 1];
@@ -163,7 +154,7 @@ module.exports = function(project) {
   var topContent = project.form.content;
 
   // Number sub-forms and compile a map from summary to numbering.
-  var numberings = number(topContent, {}, []);
+  var numberings = number(project.form, {}, []);
 
   // Compile content.
   project.form.content = compileContent(topContent, values, numberings);
