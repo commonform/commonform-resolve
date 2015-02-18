@@ -8,8 +8,9 @@
     "url": "http://kemitchell.com/"
   },
   "dependencies": {
-    "commonform-group-series": "0.1.x",
-    "commonform-validate": "0.1.x"
+    "commonform-group-series": "0.2.x",
+    "commonform-predicate": "^0.1.0",
+    "immutable": "^3.6.2"
   },
   "devDependencies": {
     "chai": "^1.10.0",
