@@ -3,7 +3,7 @@ var predicate = require('commonform-predicate');
 var resolve;
 
 module.exports = function(element, values, summaryNumberings) {
-  resolve = resolve || require('./resolve');
+  resolve = resolve || require('./form');
   if (predicate.text(element)) {
     return element;
   } else if (predicate.use(element)) {
