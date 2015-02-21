@@ -2,21 +2,20 @@
 var Immutable = require('immutable');
 var expect = require('chai').expect;
 var number = require('commonform-number');
-
 var resolve = require('..');
 
 var xofy = function(x, y) {
   return {number: x, of: y};
 };
 
-var makeForm = function(content) {
+var immutableForm = function(content) {
   return Immutable.fromJS({content: content});
 };
 
 var noValues = Immutable.Map();
 
 var A_FORM = {content:['A']};
-var justAForm = makeForm(['A']);
+var justAForm = immutableForm(['A']);
 var justANumberings = number(justAForm);
 
 describe('resolve', function() {
@@ -38,7 +37,7 @@ describe('resolve', function() {
 
   describe('of term uses', function() {
     it('converts them to text', function() {
-      var form = makeForm([{use: 'A'}]);
+      var form = immutableForm([{use: 'A'}]);
       expect(
         resolve(form, noValues, number(form))
           .get('content').toJS())
@@ -48,7 +47,7 @@ describe('resolve', function() {
 
   describe('of term definitions', function() {
     it('passes them through', function() {
-      var form = makeForm([{definition: 'A'}]);
+      var form = immutableForm([{definition: 'A'}]);
       expect(
         resolve(form, noValues, number(form))
           .get('content').toJS())
@@ -58,7 +57,7 @@ describe('resolve', function() {
 
   describe('of fields', function() {
     it('replaces them with their values', function() {
-      var form = makeForm([{field: 'A'}]);
+      var form = immutableForm([{field: 'A'}]);
       expect(
         resolve(form, Immutable.Map({A: '1'}), number(form))
           .get('content').toJS())
@@ -67,7 +66,7 @@ describe('resolve', function() {
 
     describe('without values', function() {
       it('replaces them with a blank', function() {
-        var form = makeForm([{field: 'A'}]);
+        var form = immutableForm([{field: 'A'}]);
         expect(
           resolve(form, noValues, number(form))
             .get('content').toJS())
@@ -78,10 +77,9 @@ describe('resolve', function() {
 
   describe('of references', function() {
     it('replaces summaries with numberings', function() {
-      var form = makeForm([
+      var form = immutableForm([
         {summary: 'A', form: A_FORM},
-        {reference: 'A'}
-      ]);
+        {reference: 'A'}]);
       var numbering = [{series: xofy(1, 1), element: xofy(1, 1)}];
       expect(
         resolve(form, noValues, number(form))
@@ -91,7 +89,7 @@ describe('resolve', function() {
 
     describe('to non-existent provisions', function() {
       it('marks them broken', function() {
-        var form = makeForm([{reference: 'A'}]);
+        var form = immutableForm([{reference: 'A'}]);
         expect(
           resolve(form, noValues, number(form))
             .get('content').toJS())
@@ -101,11 +99,10 @@ describe('resolve', function() {
 
     describe('to multiple provisions', function() {
       it('flags them ambiguous', function() {
-        var form = makeForm([
+        var form = immutableForm([
           {summary: 'A', form: A_FORM},
           {summary: 'A', form: A_FORM},
-          {reference: 'A'}
-        ]);
+          {reference: 'A'}]);
         expect(
           resolve(form, noValues, number(form))
             .get('content').get(2).toJS())
@@ -114,16 +111,14 @@ describe('resolve', function() {
             ambiguous: true,
             numberings: [
               [{series: xofy(1, 1), element: xofy(1, 2)}],
-              [{series: xofy(1, 1), element: xofy(2, 2)}]
-            ]
-          });
+              [{series: xofy(1, 1), element: xofy(2, 2)}]]});
       });
     });
   });
 
   describe('concatenation', function() {
     it('handles [...string, object...]', function() {
-      var form = makeForm(['A', {use: 'B'}]);
+      var form = immutableForm(['A', {use: 'B'}]);
       expect(
         resolve(form, noValues, number(form))
           .get('content').toJS())
@@ -131,7 +126,7 @@ describe('resolve', function() {
     });
 
     it('handles [...object, string...]', function() {
-      var form = makeForm([{use: 'A'}, 'B']);
+      var form = immutableForm([{use: 'A'}, 'B']);
       expect(
         resolve(form, noValues, number(form))
           .get('content').toJS())
@@ -140,11 +135,10 @@ describe('resolve', function() {
   });
 
   it('preserves conspicuous flags', function() {
-    var form = makeForm([{
+    var form = immutableForm([{
       summary: 'First',
       form: {content: ['test'],
-      conspicuous: 'true'}
-    }]);
+      conspicuous: 'true'}}]);
     expect(
       resolve(form, noValues, number(form))
         .get('content').toJS())
@@ -152,16 +146,30 @@ describe('resolve', function() {
         summary: 'First',
         form: {
           content: ['test'],
-          conspicuous: 'true'
-        }
-      }]);
+          conspicuous: 'true'},
+        numbering: [
+          {series: {number: 1, of: 1}, element: {number: 1, of: 1}}]}]);
   });
 
   it('errors on invalid content', function() {
-    var form = makeForm([{invalid: 'object'}]);
+    var form = immutableForm([{invalid: 'object'}]);
     expect(function() {
       resolve(form, noValues, number(form));
     })
       .to.throw(/Invalid content/);
+  });
+
+  describe('numberings', function() {
+    it('are attached to forms', function() {
+      var form = immutableForm([{form: {content: ['test']}}]);
+      expect(
+        resolve(form, noValues, number(form))
+          .get('content').toJS())
+        .to.eql([{
+          numbering: [
+            {series: {number: 1, of: 1}, element: {number: 1, of: 1}}],
+          form: {
+            content: ['test']}}]);
+    });
   });
 });

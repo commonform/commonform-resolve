@@ -2,33 +2,42 @@ var Immutable = require('immutable');
 var predicate = require('commonform-predicate');
 var resolve;
 
-module.exports = function(element, values, summaryNumberings) {
+module.exports = function(element, values, numbering, summaries) {
   resolve = resolve || require('./form');
   if (predicate.text(element)) {
     return element;
   } else if (predicate.use(element)) {
     return element.get('use');
   } else if (predicate.subForm(element)) {
-    return element.update('form', function(form) {
-      return resolve(form, values, summaryNumberings);
+    return element.withMutations(function(element) {
+      element.set('numbering', numbering.get('numbering'));
+      element.set(
+        'form',
+        resolve(
+          element.get('form'),
+          values,
+          numbering.get('form', null),
+          summaries
+        )
+      );
     });
   } else if (predicate.definition(element)) {
     return element;
   } else if (predicate.reference(element)) {
     var summary = element.get('reference');
     // Resolvable
-    if (summaryNumberings.has(summary)) {
-      var numberings = summaryNumberings.get(summary);
+    if (summaries.has(summary)) {
+      var matches = summaries.get(summary);
       // Unambiguous
-      if (numberings.count() === 1) {
+      if (matches.count() === 1) {
         return Immutable.Map({
-          reference: numberings.first()
+          reference: matches.first()
         });
       // Ambiguous
       } else {
         return Immutable.Map({
           ambiguous: true,
-          numberings: numberings,
+          numberings: matches,
           reference: summary
         });
       }

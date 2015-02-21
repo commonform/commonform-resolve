@@ -3,12 +3,17 @@ var emptyList = Immutable.List();
 
 var resolveElement = require('./element');
 
-module.exports = function(form, values, summaryNumberings) {
+module.exports = function(form, values, numbering, summaries) {
   var out = form.update('content', function(content) {
     return content
       // resolve content
-      .map(function(element) {
-        return resolveElement(element, values, summaryNumberings);
+      .map(function(element, index) {
+        return resolveElement(
+          element,
+          values,
+          numbering ? numbering.getIn(['content', index], null) : null,
+          summaries
+        );
       })
 
       // Concatenate contiguous strings.
