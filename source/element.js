@@ -2,32 +2,32 @@ var Immutable = require('immutable');
 var predicate = require('commonform-predicate');
 var resolve;
 
-module.exports = function(element, values, numbering, summaries) {
+module.exports = function(element, values, numbering, headings) {
   resolve = resolve || require('./form');
   if (predicate.text(element)) {
     return element;
   } else if (predicate.use(element)) {
     return element.get('use');
-  } else if (predicate.subForm(element)) {
+  } else if (predicate.inclusion(element)) {
     return element.withMutations(function(element) {
       element.set('numbering', numbering.get('numbering'));
       element.set(
-        'form',
+        'inclusion',
         resolve(
-          element.get('form'),
+          element.get('inclusion'),
           values,
-          numbering.get('form', null),
-          summaries
+          numbering.get('inclusion', null),
+          headings
         )
       );
     });
   } else if (predicate.definition(element)) {
     return element;
   } else if (predicate.reference(element)) {
-    var summary = element.get('reference');
+    var heading = element.get('reference');
     // Resolvable
-    if (summaries.has(summary)) {
-      var matches = summaries.get(summary);
+    if (headings.has(heading)) {
+      var matches = headings.get(heading);
       // Unambiguous
       if (matches.count() === 1) {
         return Immutable.Map({
@@ -38,20 +38,20 @@ module.exports = function(element, values, numbering, summaries) {
         return Immutable.Map({
           ambiguous: true,
           numberings: matches,
-          reference: summary
+          reference: heading
         });
       }
     // Broken
     } else {
       return element.merge({broken: true});
     }
-  } else if (predicate.field(element)) {
-    var field = element.get('field');
-    if (values.has(field)) {
-      return values.get(field);
+  } else if (predicate.insertion(element)) {
+    var value = element.get('insertion');
+    if (values.has(value)) {
+      return values.get(value);
     } else {
       return Immutable.Map({
-        blank: field
+        blank: value
       });
     }
   } else {

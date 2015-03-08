@@ -55,9 +55,9 @@ describe('resolve', function() {
     });
   });
 
-  describe('of fields', function() {
+  describe('of insertions', function() {
     it('replaces them with their values', function() {
-      var form = immutableForm([{field: 'A'}]);
+      var form = immutableForm([{insertion: 'A'}]);
       expect(
         resolve(form, Immutable.Map({A: '1'}), number(form))
           .get('content').toJS())
@@ -66,7 +66,7 @@ describe('resolve', function() {
 
     describe('without values', function() {
       it('replaces them with a blank', function() {
-        var form = immutableForm([{field: 'A'}]);
+        var form = immutableForm([{insertion: 'A'}]);
         expect(
           resolve(form, noValues, number(form))
             .get('content').toJS())
@@ -76,9 +76,9 @@ describe('resolve', function() {
   });
 
   describe('of references', function() {
-    it('replaces summaries with numberings', function() {
+    it('replaces headings with numberings', function() {
       var form = immutableForm([
-        {summary: 'A', form: A_FORM},
+        {heading: 'A', inclusion: A_FORM},
         {reference: 'A'}]);
       var numbering = [{series: xofy(1, 1), element: xofy(1, 1)}];
       expect(
@@ -100,8 +100,8 @@ describe('resolve', function() {
     describe('to multiple provisions', function() {
       it('flags them ambiguous', function() {
         var form = immutableForm([
-          {summary: 'A', form: A_FORM},
-          {summary: 'A', form: A_FORM},
+          {heading: 'A', inclusion: A_FORM},
+          {heading: 'A', inclusion: A_FORM},
           {reference: 'A'}]);
         expect(
           resolve(form, noValues, number(form))
@@ -136,15 +136,15 @@ describe('resolve', function() {
 
   it('preserves conspicuous flags', function() {
     var form = immutableForm([{
-      summary: 'First',
-      form: {content: ['test'],
+      heading: 'First',
+      inclusion: {content: ['test'],
       conspicuous: 'true'}}]);
     expect(
       resolve(form, noValues, number(form))
         .get('content').toJS())
       .to.eql([{
-        summary: 'First',
-        form: {
+        heading: 'First',
+        inclusion: {
           content: ['test'],
           conspicuous: 'true'},
         numbering: [
@@ -161,14 +161,14 @@ describe('resolve', function() {
 
   describe('numberings', function() {
     it('are attached to forms', function() {
-      var form = immutableForm([{form: {content: ['test']}}]);
+      var form = immutableForm([{inclusion: {content: ['test']}}]);
       expect(
         resolve(form, noValues, number(form))
           .get('content').toJS())
         .to.eql([{
           numbering: [
             {series: {number: 1, of: 1}, element: {number: 1, of: 1}}],
-          form: {
+          inclusion: {
             content: ['test']}}]);
     });
   });

@@ -18,7 +18,7 @@ var numberings = function(form, results, keyArray, numbering) {
     })
     .count();
 
-  // Generate path-to-numbering and summary-to-numbering mappings.
+  // Generate path-to-numbering and heading-to-numbering mappings.
   return groups.reduce(function(results, group) {
     if (group.get('type') !== 'series') {
       elementIndex += group.get('content').count();
@@ -26,7 +26,7 @@ var numberings = function(form, results, keyArray, numbering) {
     } else {
       seriesNumber = seriesNumber + 1;
       var content = group.get('content');
-      return content.reduce(function(results, subForm, subFormIndex) {
+      return content.reduce(function(results, inclusion, inclusionIndex) {
         var elementKeyArray = keyArray.push('content', elementIndex++);
         var elementNumbering = numbering.push(map({
           series: map({
@@ -34,24 +34,24 @@ var numberings = function(form, results, keyArray, numbering) {
             of: seriesCount
           }),
           element: map({
-            number: subFormIndex + 1,
+            number: inclusionIndex + 1,
             of: content.count()
           })
         }));
         // Recurse with the sub-form.
         return numberings(
-          subForm.get('form'),
+          inclusion.get('form'),
           results.withMutations(function(results) {
             // Store numbering in the form tree.
             results.setIn(elementKeyArray, elementNumbering);
-            // If the sub-form has a summary, store its numbering in
-            // relation to that summary, too.
-            if (subForm.has('summary')) {
-              var summary = subForm.get('summary');
-              var summaryKeyArray = ['summaries', summary];
-              results.updateIn(summaryKeyArray, function(numberings) {
+            // If the sub-form has a heading, store its numbering in
+            // relation to that heading, too.
+            if (inclusion.has('heading')) {
+              var heading = inclusion.get('heading');
+              var headingKeyArray = ['headings', heading];
+              results.updateIn(headingKeyArray, function(numberings) {
                 // The value may be a list, to reflect multiple uses of
-                // a single summary.
+                // a single heading.
                 return numberings ?
                   numberings.push(elementNumbering) :
                   list([elementNumbering]);
@@ -68,7 +68,7 @@ var numberings = function(form, results, keyArray, numbering) {
 
 var resultTemplate = map({
   form: map(),
-  summaries: map()
+  headings: map()
 });
 
 module.exports = function(form) {

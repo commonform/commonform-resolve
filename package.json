@@ -8,14 +8,14 @@
     "url": "http://kemitchell.com/"
   },
   "dependencies": {
-    "commonform-group-series": "0.2.x",
-    "commonform-predicate": "^0.1.0",
+    "commonform-group-series": "^0.3.1",
+    "commonform-predicate": "^0.3.0",
     "immutable": "^3.6.2"
   },
   "devDependencies": {
     "chai": "^1.10.0",
     "check-versions": "0.0.1",
-    "commonform-number": "^0.2.1",
+    "commonform-number": "^0.3.0",
     "istanbul": "^0.3.5",
     "jscs": "^1.8.1",
     "jshint": "^2.5.10",

@@ -3,7 +3,7 @@ var emptyList = Immutable.List();
 
 var resolveElement = require('./element');
 
-module.exports = function(form, values, numbering, summaries) {
+module.exports = function(form, values, numbering, headings) {
   var out = form.update('content', function(content) {
     return content
       // resolve content
@@ -12,7 +12,7 @@ module.exports = function(form, values, numbering, summaries) {
           element,
           values,
           numbering ? numbering.getIn(['content', index], null) : null,
-          summaries
+          headings
         );
       })
 

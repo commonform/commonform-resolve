@@ -5,7 +5,7 @@ module.exports = function(form, values, numberings) {
     form,
     values,
     numberings.get('form'),
-    numberings.get('summaries')
+    numberings.get('headings')
   );
 };
 
