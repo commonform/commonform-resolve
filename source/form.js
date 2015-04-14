@@ -1,35 +1,32 @@
-var Immutable = require('immutable');
-var emptyList = Immutable.List();
-
 var resolveElement = require('./element');
 
-module.exports = function(form, values, numbering, headings) {
-  var out = form.update('content', function(content) {
-    return content
-      // resolve content
-      .map(function(element, index) {
-        return resolveElement(
-          element,
-          values,
-          numbering ? numbering.getIn(['content', index], null) : null,
-          headings
-        );
-      })
+module.exports = function(form, values, numberings, headings) {
+  form.content = form.content
+    // resolve content
+    .map(function(element, index) {
+      var numbering = (
+        numberings &&
+        numberings.hasOwnProperty('content') &&
+        numberings.content.hasOwnProperty(index)
+      ) ? numberings.content[index] : null;
+      return resolveElement(element, values, numbering, headings);
+    })
 
-      // Concatenate contiguous strings.
-      .reduce(function(content, element, index) {
-        var count = content.count();
-        var last = content.last();
-        if (
-          index > 0 &&
-          typeof element === 'string' &&
-          typeof last === 'string'
-        ) {
-          return content.set(count - 1, last + element);
-        } else {
-          return content.push(element);
-        }
-      }, emptyList);
-  });
-  return out;
+    // Concatenate contiguous strings.
+    .reduce(function(content, element, index) {
+      var count = content.length;
+      var last = content[count - 1];
+      if (
+        index > 0 &&
+        typeof element === 'string' &&
+        typeof last === 'string'
+      ) {
+        content[count - 1] = last + element;
+      } else {
+        content.push(element);
+      }
+      return content;
+    }, []);
+
+  return form;
 };

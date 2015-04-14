@@ -1,59 +1,60 @@
-var Immutable = require('immutable');
 var predicate = require('commonform-predicate');
 var resolve;
 
 module.exports = function(element, values, numbering, headings) {
   resolve = resolve || require('./form');
+
   if (predicate.text(element)) {
     return element;
+
   } else if (predicate.use(element)) {
-    return element.get('use');
-  } else if (predicate.inclusion(element)) {
-    return element.withMutations(function(element) {
-      element.set('numbering', numbering.get('numbering'));
-      element.set(
-        'inclusion',
-        resolve(
-          element.get('inclusion'),
-          values,
-          numbering.get('inclusion', null),
-          headings
-        )
-      );
-    });
+    return element.use;
+
+  } else if (predicate.child(element)) {
+    element.numbering = numbering.numbering;
+    element.form = resolve(
+      element.form,
+      values,
+      numbering.form || null,
+      headings
+    );
+    return element;
+
   } else if (predicate.definition(element)) {
     return element;
+
   } else if (predicate.reference(element)) {
-    var heading = element.get('reference');
+    var heading = element.reference;
     // Resolvable
-    if (headings.has(heading)) {
-      var matches = headings.get(heading);
+    if (headings.hasOwnProperty(heading)) {
+      var matches = headings[heading];
       // Unambiguous
-      if (matches.count() === 1) {
-        return Immutable.Map({
-          reference: matches.first()
-        });
+      if (matches.length === 1) {
+        return {reference: matches[0]};
       // Ambiguous
       } else {
-        return Immutable.Map({
+        return {
           ambiguous: true,
           numberings: matches,
           reference: heading
-        });
+        };
       }
     // Broken
     } else {
-      return element.merge({broken: true});
+      element.broken = true;
+      return element;
     }
-  } else if (predicate.insertion(element)) {
-    var value = element.get('insertion');
-    if (values.has(value)) {
-      return values.get(value);
+
+  } else if (predicate.blank(element)) {
+    var value = element.blank;
+    // Filled
+    if (values.hasOwnProperty(value)) {
+      return values[value];
+    // Empty
     } else {
-      return Immutable.Map({
-        blank: value
-      });
+      return {blank: value};
     }
+
   } else {
     throw new Error('Invalid content: ' + JSON.stringify(element));
   }
