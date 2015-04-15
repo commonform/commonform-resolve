@@ -1,7 +1,9 @@
 var clone = require('clone');
+var number = require('commonform-number');
 var resolveForm = require('./form');
 
-module.exports = function(form, values, numberings) {
+module.exports = function(form, values) {
+  var numberings = number(form);
   return resolveForm(
     clone(form),
     values,

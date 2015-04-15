@@ -1,24 +1,23 @@
 /* jshint mocha: true */
 var expect = require('chai').expect;
-var number = require('commonform-number');
 var resolve = require('..');
 
-var A_FORM = {
+var formA = {
   content:['A']};
 
-var A_NUMBERINGS = number(A_FORM);
+var noValues = {};
 
 describe('resolution', function() {
   it('returns a map', function() {
     expect(
-      resolve(A_FORM, {}, A_NUMBERINGS)
+      resolve(formA, noValues)
     ).to.be.an('object');
   });
 
   describe('of strings', function() {
     it('passes them through', function() {
       expect(
-        resolve(A_FORM, {}, A_NUMBERINGS).content
+        resolve(formA, noValues).content
       ).to.eql(['A']);
     });
   });
@@ -27,7 +26,7 @@ describe('resolution', function() {
     it('converts them to text', function() {
       var form = {content: [{use: 'A'}]};
       expect(
-        resolve(form, {}, number(form)).content
+        resolve(form, noValues).content
       ).to.eql(['A']);
     });
   });
@@ -36,7 +35,7 @@ describe('resolution', function() {
     it('passes them through', function() {
       var form = {content: [{definition: 'A'}]};
       expect(
-        resolve(form, {}, number(form)).content
+        resolve(form, noValues).content
       ).to.eql([{definition: 'A'}]);
     });
   });
@@ -45,7 +44,7 @@ describe('resolution', function() {
     it('replaces them with their values', function() {
       var form = {content: [{blank: 'A'}]};
       expect(
-        resolve(form, {A: '1'}, number(form)).content
+        resolve(form, {A: '1'}).content
       ).to.eql(['1']);
     });
 
@@ -53,7 +52,7 @@ describe('resolution', function() {
       it('replaces them with a blank', function() {
         var form = {content: [{blank: 'A'}]};
         expect(
-          resolve(form, {}, number(form)).content
+          resolve(form, noValues).content
         ).to.eql([{blank: 'A'}]);
       });
     });
@@ -65,14 +64,13 @@ describe('resolution', function() {
         content: [
           {
             heading: 'A',
-            form: A_FORM
-          },
+            form: formA},
           {reference: 'A'}]};
       var numbering = [{
         series: {number: 1, of: 1},
         element: {number: 1, of: 1}}];
       expect(
-        resolve(form, {}, number(form)).content[1]
+        resolve(form, noValues).content[1]
       ).to.eql({reference: numbering});
     });
 
@@ -82,7 +80,7 @@ describe('resolution', function() {
           content: [
             {reference: 'A'}]};
         expect(
-          resolve(form, {}, number(form)).content
+          resolve(form, noValues).content
         ).to.eql([
           {
             reference: 'A',
@@ -96,14 +94,14 @@ describe('resolution', function() {
           content: [
             {
               heading: 'A',
-              form: A_FORM},
+              form: formA},
             {
               heading: 'A',
-              form: A_FORM},
+              form: formA},
             {reference: 'A'}]
         };
         expect(
-          resolve(form, {}, number(form)).content[2]
+          resolve(form, noValues).content[2]
         ).to.eql({
           reference: 'A',
           ambiguous: true,
@@ -125,7 +123,7 @@ describe('resolution', function() {
       var form = {
         content: ['A', {use: 'B'}]};
       expect(
-        resolve(form, {}, number(form)).content
+        resolve(form, noValues).content
       ).to.eql(['AB']);
     });
 
@@ -133,7 +131,7 @@ describe('resolution', function() {
       var form = {
         content: [{use: 'A'}, 'B']};
       expect(
-        resolve(form, {}, number(form)).content
+        resolve(form, noValues).content
       ).to.eql(['AB']);
     });
   });
@@ -147,7 +145,7 @@ describe('resolution', function() {
             content: ['test'],
             conspicuous: 'true'}}]};
     expect(
-      resolve(form, {}, number(form)).content
+      resolve(form, noValues).content
     ).to.eql([{
       heading: 'First',
       form: {
@@ -164,7 +162,7 @@ describe('resolution', function() {
       content: [
         {invalid: 'object'}]};
     expect(function() {
-      resolve(form, {}, number(form));
+      resolve(form, noValues);
     }).to.throw(/Invalid content/);
   });
 
@@ -176,7 +174,7 @@ describe('resolution', function() {
             form: {
               content: ['test']}}]};
       expect(
-        resolve(form, {}, number(form)).content
+        resolve(form, noValues).content
       ).to.eql([{
         numbering: [
           {
