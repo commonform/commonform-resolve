@@ -1,27 +1,23 @@
 {
   "name": "commonform-resolve",
-  "description": "resolve Common Form content objects",
+  "description": "resolve definitions, uses, references, fields, and blanks",
   "version": "1.0.0-rc1",
-  "author": {
-    "name": "Kyle E. Mitchell",
-    "email": "kyle@kemitchell.com",
-    "url": "http://kemitchell.com/"
-  },
+  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (http://kemitchell.com)",
   "dependencies": {
     "clone": "^1.0.2",
-    "commonform-group-series": "1.x",
-    "commonform-predicate": "1.x"
+    "commonform-group-series": "^0.4.0",
+    "commonform-predicate": "^0.4.0"
   },
   "devDependencies": {
-    "chai": "^1.10.0",
-    "check-versions": "1.x",
-    "commonform-number": "1.x",
+    "chai": "^2.2.0",
+    "check-versions": "^1.0.0",
+    "commonform-number": "^0.4.0",
     "istanbul": "^0.3.5",
     "jscs": "^1.8.1",
     "jshint": "^2.5.10",
     "mocha": "^2.0.1"
   },
-  "homepage": "https://github.com/commonform/commonform-resolve",
+  "homepage": "https://commonform.github.io",
   "keywords": [
     "contracts",
     "document assembly",
@@ -30,11 +26,8 @@
     "markup"
   ],
   "license": "Apache-2.0",
-  "main": "source/index",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/commonform/commonform-resolve.git"
-  },
+  "main": "source/index.js",
+  "repository": "commonform/commonform-resolve",
   "scripts": {
     "check": "check-versions --check-module",
     "coverage": "istanbul cover _mocha && istanbul check-coverage coverage/coverage.json",
