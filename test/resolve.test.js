@@ -71,7 +71,9 @@ describe('resolution', function() {
         element: {number: 1, of: 1}}];
       expect(
         resolve(form, noValues).content[1]
-      ).to.eql({reference: numbering});
+      ).to.eql({
+        heading: 'A',
+        numbering: numbering});
     });
 
     describe('to non-existent provisions', function() {
@@ -83,7 +85,7 @@ describe('resolution', function() {
           resolve(form, noValues).content
         ).to.eql([
           {
-            reference: 'A',
+            heading: 'A',
             broken: true}]);
       });
     });
@@ -103,7 +105,7 @@ describe('resolution', function() {
         expect(
           resolve(form, noValues).content[2]
         ).to.eql({
-          reference: 'A',
+          heading: 'A',
           ambiguous: true,
           numberings: [
             [

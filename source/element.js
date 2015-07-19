@@ -30,17 +30,22 @@ module.exports = function(element, values, numbering, headings) {
       var matches = headings[heading];
       // Unambiguous
       if (matches.length === 1) {
-        return {reference: matches[0]};
+        return {
+          heading: heading,
+          numbering: matches[0]
+        };
       // Ambiguous
       } else {
         return {
           ambiguous: true,
-          numberings: matches,
-          reference: heading
+          heading: heading,
+          numberings: matches
         };
       }
     // Broken
     } else {
+      delete element.reference;
+      element.heading = heading;
       element.broken = true;
       return element;
     }
