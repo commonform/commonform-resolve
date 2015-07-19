@@ -11,5 +11,3 @@ module.exports = function(form, values) {
     numberings.headings
   );
 };
-
-module.exports.version = '0.4.0';

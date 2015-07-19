@@ -11,7 +11,6 @@
   },
   "devDependencies": {
     "chai": "^2.2.0",
-    "check-versions": "^1.0.0",
     "istanbul": "^0.3.5",
     "jscs": "^1.8.1",
     "jshint": "^2.5.10",
@@ -29,10 +28,9 @@
   "main": "source/index.js",
   "repository": "commonform/commonform-resolve",
   "scripts": {
-    "check": "check-versions --check-module",
     "coverage": "istanbul cover _mocha && istanbul check-coverage coverage/coverage.json",
     "lint": "jshint source test && jscs source test",
-    "pre-commit": "npm run lint && npm run check && npm run coverage",
+    "pre-commit": "npm run lint && npm run coverage",
     "test": "mocha",
     "travis-ci": "npm run pre-commit"
   }
