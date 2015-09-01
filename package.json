@@ -1,7 +1,7 @@
 {
   "name": "commonform-resolve",
   "description": "resolve definitions, uses, references, fields, and blanks",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (http://kemitchell.com)",
   "dependencies": {
     "commonform-group-series": "^0.5.0",
