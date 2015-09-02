@@ -14,14 +14,14 @@ assert.deepEqual(
   { content: [ 'A' ] })
 ```
 
-Converts term uses to strings:
+Passes term uses through:
 
 ```javascript
 assert.deepEqual(
   resolve(
     { content: [ { use: 'A' } ] },
     { }),
-  { content: [ 'A' ] })
+  { content: [ { use: 'A' } ] })
 ```
 
 Passes definitions through:
@@ -34,14 +34,14 @@ assert.deepEqual(
   { content: [ { definition: 'A' } ] })
 ```
 
-Replaces blanks with provided values, or a blank when none are provided:
+Provides blank values:
 
 ```javascript
 assert.deepEqual(
   resolve(
     { content: [ { blank: 'A' } ] },
     { A: '1' }),
-  { content: [ '1' ] })
+  { content: [ { blank: 'A', value: '1' } ] })
 
 assert.deepEqual(
   resolve(
@@ -99,19 +99,6 @@ assert.deepEqual(
             element: { number: 1, of: 2 } } ],
         [ { series:  { number: 1, of: 1 },
             element: { number: 2, of: 2 } } ] ] } )
-
-```
-
-Concatenates strings and contiguous objects that are resolved to strings:
-
-```javascript
-assert.deepEqual(
-  resolve({ content: [ 'A', { use: 'B' } ] }, { }).content,
-  [ 'AB' ])
-
-assert.deepEqual(
-  resolve({ content: [ { use: 'A' }, 'B' ] }, { }).content,
-  [ 'AB' ])
 
 ```
 
