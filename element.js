@@ -7,7 +7,7 @@ module.exports = function(element, values, numbering, headings) {
   if (predicate.text(element)) {
     return element }
   else if (predicate.use(element)) {
-    return element.use }
+    return element }
   else if (predicate.child(element)) {
     element.numbering = numbering.numbering
     element.form = resolve(
@@ -44,9 +44,9 @@ module.exports = function(element, values, numbering, headings) {
     var value = element.blank
     // Filled
     if (values.hasOwnProperty(value)) {
-      return values[value] }
+      return { blank: value, value: values[value] } }
     // Empty
     else {
-      return {blank: value} } }
+      return { blank: value } } }
   else {
     throw new Error('Invalid content: ' + JSON.stringify(element)) } }
