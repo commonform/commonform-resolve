@@ -1,7 +1,8 @@
 var predicate = require('commonform-predicate')
+var deepEqual = require('deep-equal')
 var resolve
 
-module.exports = function(element, values, numbering, headings) {
+module.exports = function(element, path, values, numbering, headings) {
   resolve = resolve || require('./form')
 
   if (predicate.text(element)) {
@@ -12,6 +13,7 @@ module.exports = function(element, values, numbering, headings) {
     element.numbering = numbering.numbering
     element.form = resolve(
       element.form,
+      path.concat('form'),
       values,
       numbering.form || null,
       headings)
@@ -41,12 +43,19 @@ module.exports = function(element, values, numbering, headings) {
       element.broken = true
       return element } }
   else if (predicate.blank(element)) {
-    var value = element.blank
+    var text = value(path, values)
     // Filled
-    if (values.hasOwnProperty(value)) {
-      return { blank: value, value: values[value] } }
+    if (text) {
+      return { blank: text } }
     // Empty
     else {
-      return { blank: value } } }
+      return { blank: undefined } } }
   else {
     throw new Error('Invalid content: ' + JSON.stringify(element)) } }
+
+function value(path, values) {
+  var length = values.length
+  for (var index = 0; index < length; index++) {
+    var element = values[index]
+    if (deepEqual(element.blank, path)) {
+      return element.value } } }

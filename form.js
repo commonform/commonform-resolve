@@ -1,6 +1,6 @@
 var resolveElement = require('./element')
 
-module.exports = function(form, values, numberings, headings) {
+module.exports = function(form, path, values, numberings, headings) {
   form.content = form.content
     // resolve content
     .map(function(element, index) {
@@ -9,7 +9,10 @@ module.exports = function(form, values, numberings, headings) {
           numberings.hasOwnProperty('content') &&
           numberings.content.hasOwnProperty(index) ) ?
         numberings.content[index] : null )
-      return resolveElement(element, values, numbering, headings) })
+      var childPath = path.concat('content', index)
+      return resolveElement(
+        element, childPath,
+        values, numbering, headings) })
 
     // Concatenate contiguous strings.
     .reduce(

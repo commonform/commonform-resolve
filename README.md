@@ -40,14 +40,14 @@ Provides blank values:
 assert.deepEqual(
   resolve(
     { content: [ { blank: 'A' } ] },
-    { A: '1' }),
-  { content: [ { blank: 'A', value: '1' } ] })
+    [ { blank: [ 'content', 0 ], value: '1' } ]),
+  { content: [ { blank: '1' } ] })
 
 assert.deepEqual(
   resolve(
-    { content: [ { blank: 'A' } ] },
-    { }),
-  { content: [ { blank: 'A' } ] })
+    { content: [ { blank: '' } ] },
+    [ ]),
+  { content: [ { blank: undefined } ] })
 ```
 
 Replaces references with the numberings of target forms:
