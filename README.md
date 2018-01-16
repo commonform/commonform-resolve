@@ -67,14 +67,15 @@ assert.deepEqual(
   resolve(
     {
       content: [
-        {heading: 'A',
-          form: {content: ['A']}},
+        {
+          heading: 'A',
+          form: {content: ['A']}
+        },
         {reference: 'A'}
       ]
     },
     {}
-  )
-  .content[1],
+  ).content[1],
   {
     heading: 'A',
     numbering: [
@@ -106,16 +107,19 @@ assert.deepEqual(
   resolve(
     {
       content: [
-        {heading: 'A',
-          form: {content: ['A']}},
-        {heading: 'A',
-          form: {content: ['A']}},
+        {
+          heading: 'A',
+          form: {content: ['A']}
+        },
+        {
+          heading: 'A',
+          form: {content: ['A']}
+        },
         {reference: 'A'}
       ]
     },
     {}
-  )
-  .content[2],
+  ).content[2],
   {
     heading: 'A',
     ambiguous: true,
@@ -154,8 +158,7 @@ assert.deepEqual(
       ]
     },
     {}
-  )
-  .content,
+  ).content,
   [
     {
       heading: 'First',
@@ -195,8 +198,7 @@ assert.deepEqual(
   resolve(
     {content: [{form: {content: ['test']}}]},
     {}
-  )
-  .content,
+  ).content,
   [
     {
       numbering: [
