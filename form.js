@@ -1,18 +1,19 @@
 var resolveElement = require('./element')
 
-module.exports = function (form, path, values, numberings, headings) {
+module.exports = function (form, path, values, numberings, headings, parentNumbering) {
+
   form.content = form.content
 
   // resolve content
   .map(function (element, index) {
     var numbering = (
       (
-        numberings &&
+        !numberings.ended &&
         numberings.hasOwnProperty('content') &&
         numberings.content.hasOwnProperty(index)
       )
       ? numberings.content[index]
-      : null
+      : numberings
     )
     var childPath = path.concat('content', index)
     return resolveElement(

@@ -88,6 +88,53 @@ assert.deepEqual(
 )
 ```
 
+Resolves references to the nearest target form:
+
+```javascript
+assert.deepEqual(
+  resolve(
+    {
+      content: [
+        {
+          heading: 'A',
+          form: {content: ['A']}
+        },
+        {
+          form: {
+            content: [
+              {
+                heading: 'A',
+                form: {content: ['some text']}
+              },
+              {
+                form: {
+                  content: [{reference: 'A'}]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {}
+  ).content[1].form.content[1].form.content[0],
+  {
+    heading: 'A',
+    nearest: true,
+    numbering: [
+      {
+        series: {number: 1, of: 1},
+        element: {number: 2, of: 2}
+      },
+      {
+        series: {number: 1, of: 1},
+        element: {number: 1, of: 2}
+      }
+    ]
+  }
+)
+```
+
 Indicates broken references:
 
 ```javascript

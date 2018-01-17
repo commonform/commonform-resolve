@@ -15,7 +15,7 @@ module.exports = function (element, path, values, numbering, headings) {
       element.form,
       path.concat('form'),
       values,
-      numbering.form || null,
+      numbering.form || {ended: true, parent: numbering},
       headings
     )
     return element
@@ -34,10 +34,38 @@ module.exports = function (element, path, values, numbering, headings) {
         }
       // Ambiguous
       } else {
-        return {
-          ambiguous: true,
-          heading: heading,
-          numberings: matches
+        var maxNearness = 0
+        var closestMatches = matches
+          .map(function (match) {
+            var nearness = headingNearness(
+              numbering.ended
+                ? numbering.parent.numbering
+                : numbering,
+              match
+            )
+            if (nearness > maxNearness) {
+              maxNearness = nearness
+            }
+            return {
+              nearness: nearness,
+              match: match
+            }
+          })
+          .filter(function (element) {
+            return element.nearness === maxNearness
+          })
+        if (closestMatches.length === 1) {
+          return {
+            heading: heading,
+            nearest: true,
+            numbering: closestMatches[0].match
+          }
+        } else {
+          return {
+            ambiguous: true,
+            heading: heading,
+            numberings: matches
+          }
         }
       }
     // Broken
@@ -69,4 +97,25 @@ function value (path, values) {
       return element.value
     }
   }
+}
+
+function headingNearness (reference, heading) {
+  var returned = 0.0
+  var prefixLength = Math.min(reference.length, heading.length)
+  for (var index = 0; index < prefixLength; index++) {
+    if (deepEqual(reference[index], heading[index])) {
+      returned += 1.0
+    } else if (
+      deepEqual(
+        reference[index].series,
+        heading[index].series
+      )
+    ) {
+      returned += 0.5
+      break
+    } else {
+      break
+    }
+  }
+  return returned
 }
