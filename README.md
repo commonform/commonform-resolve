@@ -120,8 +120,8 @@ assert.deepEqual(
   ).content[1].form.content[1].form.content[0],
   {
     heading: 'A',
-    nearest: true,
-    numbering: [
+    ambiguous: true,
+    nearest: [
       {
         series: {number: 1, of: 1},
         element: {number: 2, of: 2}
@@ -130,6 +130,24 @@ assert.deepEqual(
         series: {number: 1, of: 1},
         element: {number: 1, of: 2}
       }
+    ],
+    numberings: [
+      [
+        {
+          series: {number: 1, of: 1},
+          element: {number: 1, of: 2}
+        }
+      ],
+      [
+        {
+          series: {number: 1, of: 1},
+          element: {number: 2, of: 2}
+        },
+        {
+          series: {number: 1, of: 1},
+          element: {number: 1, of: 2}
+        }
+      ]
     ]
   }
 )

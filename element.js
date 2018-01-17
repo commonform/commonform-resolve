@@ -57,8 +57,9 @@ module.exports = function (element, path, values, numbering, headings) {
         if (closestMatches.length === 1) {
           return {
             heading: heading,
-            nearest: true,
-            numbering: closestMatches[0].match
+            ambiguous: true,
+            nearest: closestMatches[0].match,
+            numberings: matches
           }
         } else {
           return {
