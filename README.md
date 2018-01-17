@@ -88,7 +88,7 @@ assert.deepEqual(
 )
 ```
 
-Resolves references to the nearest target form:
+Provides numbering of nearest target form:
 
 ```javascript
 assert.deepEqual(
@@ -146,6 +146,77 @@ assert.deepEqual(
         {
           series: {number: 1, of: 1},
           element: {number: 1, of: 2}
+        }
+      ]
+    ]
+  }
+)
+
+assert.deepEqual(
+  resolve(
+    {
+      content: [
+        {
+          heading: 'A',
+          form: {content: ['A']}
+        },
+        {
+          form: {
+            content: [
+              {
+                form: {
+                  content: [
+                    {reference: 'A'},
+                    {
+                      heading: 'A',
+                      form: {content: ['some text']}
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {}
+  ).content[1].form.content[0].form.content[0],
+  {
+    heading: 'A',
+    ambiguous: true,
+    nearest: [
+      {
+        series: {number: 1, of: 1},
+        element: {number: 2, of: 2}
+      },
+      {
+        series: {number: 1, of: 1},
+        element: {number: 1, of: 1}
+      },
+      {
+        series: {number: 1, of: 1},
+        element: {number: 1, of: 1}
+      }
+    ],
+    numberings: [
+      [
+        {
+          series: {number: 1, of: 1},
+          element: {number: 1, of: 2}
+        }
+      ],
+      [
+        {
+          series: {number: 1, of: 1},
+          element: {number: 2, of: 2}
+        },
+        {
+          series: {number: 1, of: 1},
+          element: {number: 1, of: 1}
+        },
+        {
+          series: {number: 1, of: 1},
+          element: {number: 1, of: 1}
         }
       ]
     ]

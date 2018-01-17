@@ -15,7 +15,10 @@ module.exports = function (element, path, values, numbering, headings) {
       element.form,
       path.concat('form'),
       values,
-      numbering.form || {ended: true, parent: numbering},
+      numbering.form || {
+        ended: true,
+        parent: numbering
+      },
       headings
     )
     return element
@@ -40,7 +43,9 @@ module.exports = function (element, path, values, numbering, headings) {
             var nearness = headingNearness(
               numbering.ended
                 ? numbering.parent.numbering
-                : numbering,
+                : numbering.content[
+                  Object.keys(numbering.content)[0]
+                ].numbering.slice(0, -1),
               match
             )
             if (nearness > maxNearness) {
