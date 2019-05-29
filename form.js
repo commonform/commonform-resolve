@@ -8,16 +8,19 @@ module.exports = function (form, path, values, numberings, headings) {
       var numbering = (
         (
           numberings &&
-        numberings.hasOwnProperty('content') &&
-        numberings.content.hasOwnProperty(index)
+          numberings.hasOwnProperty('content') &&
+          numberings.content.hasOwnProperty(index)
         )
           ? numberings.content[index]
           : null
       )
       var childPath = path.concat('content', index)
       return resolveElement(
-        element, childPath,
-        values, numbering, headings
+        element,
+        childPath,
+        values,
+        numbering,
+        headings
       )
     })
 
@@ -27,8 +30,8 @@ module.exports = function (form, path, values, numberings, headings) {
       var last = content[count - 1]
       if (
         index > 0 &&
-      typeof element === 'string' &&
-      typeof last === 'string'
+        typeof element === 'string' &&
+        typeof last === 'string'
       ) {
         content[count - 1] = last + element
       } else {
