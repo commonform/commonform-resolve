@@ -7,69 +7,71 @@ Passes strings through:
 ```javascript
 var assert = require('assert')
 
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: ['A']},
+    { content: [ 'A' ] },
     {}
   ),
-  {content: ['A']}
+  { content: [ 'A' ] }
 )
 ```
 
 Passes term uses through:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: [{use: 'A'}]},
+    { content: [ { use: 'A' } ] },
     {}
   ),
-  {content: [{use: 'A'}]}
+  { content: [ { use: 'A' } ] }
 )
 ```
 
 Passes definitions through:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: [{definition: 'A'}]},
+    { content: [ { definition: 'A' } ] },
     {}
   ),
-  {content: [{definition: 'A'}]}
+  { content: [ { definition: 'A' } ] }
 )
 ```
 
 Provides blank values:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: [{blank: 'A'}]},
-    [{blank: ['content', 0], value: '1'}]
+    { content: [ { blank: 'A' } ] },
+    [ { blank: [ 'content', 0 ], value: '1' } ]
   ),
-  {content: [{blank: '1'}]}
+  { content: [ { blank: '1' } ] }
 )
 
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: [{blank: ''}]},
+    { content: [ { blank: '' } ] },
     []
   ),
-  {content: [{blank: undefined}]}
+  { content: [ { blank: undefined } ] }
 )
 ```
 
 Replaces references with the numberings of target forms:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
     {
       content: [
-        {heading: 'A',
-          form: {content: ['A']}},
-        {reference: 'A'}
+        {
+          heading: 'A',
+          form: { content: [ 'A' ] }
+        },
+        { reference: 'A' }
       ]
     },
     {}
@@ -79,8 +81,8 @@ assert.deepEqual(
     heading: 'A',
     numbering: [
       {
-        series: {number: 1, of: 1},
-        element: {number: 1, of: 1}
+        series: { number: 1, of: 1 },
+        element: { number: 1, of: 1 }
       }
     ]
   }
@@ -90,27 +92,31 @@ assert.deepEqual(
 Indicates broken references:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: [{reference: 'A'}]},
+    { content: [ { reference: 'A' } ] },
     {}
   ),
-  {content: [{heading: 'A', broken: true}]}
+  { content: [ { heading: 'A', broken: true } ] }
 )
 ```
 
 Flags ambiguous references with the numberings of all potential target forms:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
     {
       content: [
-        {heading: 'A',
-          form: {content: ['A']}},
-        {heading: 'A',
-          form: {content: ['A']}},
-        {reference: 'A'}
+        {
+          heading: 'A',
+          form: { content: [ 'A' ] }
+        },
+        {
+          heading: 'A',
+          form: { content: [ 'A' ] }
+        },
+        { reference: 'A' }
       ]
     },
     {}
@@ -122,14 +128,14 @@ assert.deepEqual(
     numberings: [
       [
         {
-          series: {number: 1, of: 1},
-          element: {number: 1, of: 2}
+          series: { number: 1, of: 1 },
+          element: { number: 1, of: 2 }
         }
       ],
       [
         {
-          series: {number: 1, of: 1},
-          element: {number: 2, of: 2}
+          series: { number: 1, of: 1 },
+          element: { number: 2, of: 2 }
         }
       ]
     ]
@@ -140,14 +146,14 @@ assert.deepEqual(
 Preserves conspicuous formatting flags:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
     {
       content: [
         {
           heading: 'First',
           form: {
-            content: ['test'],
+            content: [ 'test' ],
             conspicuous: 'true'
           }
         }
@@ -160,13 +166,13 @@ assert.deepEqual(
     {
       heading: 'First',
       form: {
-        content: ['test'],
+        content: [ 'test' ],
         conspicuous: 'true'
       },
       numbering: [
         {
-          series: {number: 1, of: 1},
-          element: {number: 1, of: 1}
+          series: { number: 1, of: 1 },
+          element: { number: 1, of: 1 }
         }
       ]
     }
@@ -180,7 +186,7 @@ Throws on invalid content:
 assert.throws(
   function () {
     resolve(
-      {content: [{invalid: 'object'}]},
+      {content: [ { invalid: 'object' } ] },
       {}
     )
   },
@@ -191,9 +197,9 @@ assert.throws(
 Attaches numberings to form objects:
 
 ```javascript
-assert.deepEqual(
+assert.deepStrictEqual(
   resolve(
-    {content: [{form: {content: ['test']}}]},
+    { content: [ { form: { content: [ 'test' ] } } ] },
     {}
   )
   .content,
@@ -201,11 +207,11 @@ assert.deepEqual(
     {
       numbering: [
         {
-          series: {number: 1, of: 1},
-          element: {number: 1, of: 1}
+          series: { number: 1, of: 1 },
+          element: { number: 1, of: 1 }
         }
       ],
-      form: {content: ['test']}
+      form: { content: [ 'test' ] }
     }
   ]
 )
