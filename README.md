@@ -1,3 +1,7 @@
+# commonform-resolve
+
+resolve definitions, uses, references, fields, and blanks
+
 ```javascript
 var resolve = require('commonform-resolve')
 ```
