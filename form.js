@@ -3,7 +3,7 @@ var resolveElement = require('./element')
 module.exports = function (form, path, values, numberings, headings) {
   form.content = form.content
 
-  // resolve content
+    // resolve content
     .map(function (element, index) {
       var numbering = (
         (
@@ -24,7 +24,7 @@ module.exports = function (form, path, values, numberings, headings) {
       )
     })
 
-  // Concatenate contiguous strings.
+    // Concatenate contiguous strings.
     .reduce(function (content, element, index) {
       var count = content.length
       var last = content[count - 1]
