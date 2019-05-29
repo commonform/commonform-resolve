@@ -51,10 +51,10 @@ module.exports = function (element, path, values, numbering, headings) {
     var text = value(path, values)
     // Filled
     if (text) {
-      return {blank: text}
+      return { blank: text }
     // Empty
     } else {
-      return {blank: undefined}
+      return { blank: undefined }
     }
   } else {
     throw new Error('Invalid content: ' + JSON.stringify(element))
