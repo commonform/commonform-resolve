@@ -1,5 +1,6 @@
-var predicate = require('commonform-predicate')
 var deepEqual = require('deep-equal')
+var has = require('has')
+var predicate = require('commonform-predicate')
 var resolve
 
 module.exports = function (element, path, values, numbering, headings) {
@@ -24,7 +25,7 @@ module.exports = function (element, path, values, numbering, headings) {
   } else if (predicate.reference(element)) {
     var heading = element.reference
     // Resolvable
-    if (headings.hasOwnProperty(heading)) {
+    if (has(headings, heading)) {
       var matches = headings[heading]
       // Unambiguous
       if (matches.length === 1) {

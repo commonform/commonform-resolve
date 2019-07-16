@@ -1,4 +1,5 @@
 var resolveElement = require('./element')
+var has = require('has')
 
 module.exports = function (form, path, values, numberings, headings) {
   form.content = form.content
@@ -8,8 +9,8 @@ module.exports = function (form, path, values, numberings, headings) {
       var numbering = (
         (
           numberings &&
-          numberings.hasOwnProperty('content') &&
-          numberings.content.hasOwnProperty(index)
+          has(numberings, 'content') &&
+          has(numberings.content, index)
         )
           ? numberings.content[index]
           : null
