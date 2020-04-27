@@ -20,6 +20,9 @@ module.exports = function (element, path, values, numbering, headings) {
       headings
     )
     return element
+  } else if (predicate.component(element)) {
+    element.numbering = numbering.numbering
+    return element
   } else if (predicate.definition(element)) {
     return element
   } else if (predicate.reference(element)) {

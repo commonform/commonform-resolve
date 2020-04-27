@@ -220,3 +220,40 @@ assert.deepStrictEqual(
   ]
 )
 ```
+
+Attaches numberings to component objects:
+
+```javascript
+assert.deepStrictEqual(
+  resolve(
+    {
+      content: [
+        {
+          repository: 'commonform.org',
+          publisher: 'test',
+          project: 'test',
+          edition: 'test',
+          substitutions: { terms: {}, headings: {} }
+        }
+      ]
+    },
+    {}
+  )
+  .content,
+  [
+    {
+      repository: 'commonform.org',
+      publisher: 'test',
+      project: 'test',
+      edition: 'test',
+      substitutions: { terms: {}, headings: {} },
+      numbering: [
+        {
+          series: { number: 1, of: 1 },
+          element: { number: 1, of: 1 }
+        }
+      ]
+    }
+  ]
+)
+```
