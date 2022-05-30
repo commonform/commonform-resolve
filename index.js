@@ -1,10 +1,10 @@
-var deepEqual = require('deep-equal')
-var has = require('has')
-var number = require('commonform-number')
-var predicate = require('commonform-predicate')
+const deepEqual = require('deep-equal')
+const has = require('has')
+const number = require('commonform-number')
+const predicate = require('commonform-predicate')
 
-module.exports = function commonformResolve (form, values) {
-  var numberings = number(form)
+module.exports = (form, values) => {
+  const numberings = number(form)
   return resolveForm(
     form,
     [],
@@ -19,7 +19,7 @@ function resolveForm (form, path, values, numberings, headings) {
 
     // resolve content
     .map(function (element, index) {
-      var numbering = (
+      const numbering = (
         (
           numberings &&
           has(numberings, 'content') &&
@@ -28,7 +28,7 @@ function resolveForm (form, path, values, numberings, headings) {
           ? numberings.content[index]
           : null
       )
-      var childPath = path.concat('content', index)
+      const childPath = path.concat('content', index)
       return resolveElement(
         element,
         childPath,
@@ -40,8 +40,8 @@ function resolveForm (form, path, values, numberings, headings) {
 
     // Concatenate contiguous strings.
     .reduce(function (content, element, index) {
-      var count = content.length
-      var last = content[count - 1]
+      const count = content.length
+      const last = content[count - 1]
       if (
         index > 0 &&
         typeof element === 'string' &&
@@ -78,21 +78,21 @@ function resolveElement (element, path, values, numbering, headings) {
   } else if (predicate.definition(element)) {
     return element
   } else if (predicate.reference(element)) {
-    var heading = element.reference
+    const heading = element.reference
     // Resolvable
     if (has(headings, heading)) {
-      var matches = headings[heading]
+      const matches = headings[heading]
       // Unambiguous
       if (matches.length === 1) {
         return {
-          heading: heading,
+          heading,
           numbering: matches[0]
         }
       // Ambiguous
       } else {
         return {
           ambiguous: true,
-          heading: heading,
+          heading,
           numberings: matches
         }
       }
@@ -104,7 +104,7 @@ function resolveElement (element, path, values, numbering, headings) {
       return element
     }
   } else if (predicate.blank(element)) {
-    var text = value(path, values)
+    const text = value(path, values)
     // Filled
     if (text) {
       return { blank: text }
@@ -118,9 +118,9 @@ function resolveElement (element, path, values, numbering, headings) {
 }
 
 function value (path, values) {
-  var length = values.length
-  for (var index = 0; index < length; index++) {
-    var element = values[index]
+  const length = values.length
+  for (let index = 0; index < length; index++) {
+    const element = values[index]
     if (deepEqual(element.blank, path)) {
       return element.value
     }
