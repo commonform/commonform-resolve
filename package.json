@@ -24,8 +24,6 @@
   "license": "BlueOak-1.0.0",
   "repository": "commonform/commonform-resolve",
   "files": [
-    "element.js",
-    "form.js",
     "index.js"
   ],
   "scripts": {
