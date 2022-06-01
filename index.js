@@ -118,9 +118,7 @@ function resolveElement (element, path, values, numbering, headings) {
 }
 
 function value (path, values) {
-  const length = values.length
-  for (let index = 0; index < length; index++) {
-    const element = values[index]
+  for (const element of values) {
     if (deepEqual(element.blank, path)) {
       return element.value
     }
