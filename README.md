@@ -229,10 +229,8 @@ assert.deepStrictEqual(
     {
       content: [
         {
-          repository: 'commonform.org',
-          publisher: 'test',
-          project: 'test',
-          edition: 'test',
+          component: 'https://example.com/component',
+          version: '1.0.0',
           substitutions: { terms: {}, headings: {} }
         }
       ]
@@ -242,10 +240,8 @@ assert.deepStrictEqual(
   .content,
   [
     {
-      repository: 'commonform.org',
-      publisher: 'test',
-      project: 'test',
-      edition: 'test',
+      component: 'https://example.com/component',
+      version: '1.0.0',
       substitutions: { terms: {}, headings: {} },
       numbering: [
         {
