@@ -1,7 +1,7 @@
 {
   "name": "commonform-resolve",
   "description": "resolve definitions, uses, references, fields, and blanks",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (http://kemitchell.com)",
   "dependencies": {
     "commonform-number": "^2.0.0",
