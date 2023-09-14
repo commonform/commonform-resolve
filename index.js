@@ -58,11 +58,7 @@ function resolveForm (form, path, values, numberings, headings) {
 }
 
 function resolveElement (element, path, values, numbering, headings) {
-  if (predicate.text(element)) {
-    return element
-  } else if (predicate.use(element)) {
-    return element
-  } else if (predicate.child(element)) {
+  if (predicate.child(element)) {
     element.numbering = numbering.numbering
     element.form = resolveForm(
       element.form,
@@ -74,8 +70,6 @@ function resolveElement (element, path, values, numbering, headings) {
     return element
   } else if (predicate.component(element)) {
     element.numbering = numbering.numbering
-    return element
-  } else if (predicate.definition(element)) {
     return element
   } else if (predicate.reference(element)) {
     const heading = element.reference
@@ -113,7 +107,7 @@ function resolveElement (element, path, values, numbering, headings) {
       return { blank: undefined }
     }
   } else {
-    throw new Error('Invalid content: ' + JSON.stringify(element))
+    return element
   }
 }
 

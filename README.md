@@ -184,20 +184,6 @@ assert.deepStrictEqual(
 )
 ```
 
-Throws on invalid content:
-
-```javascript
-assert.throws(
-  function () {
-    resolve(
-      {content: [ { invalid: 'object' } ] },
-      {}
-    )
-  },
-  /Invalid content/
-)
-```
-
 Attaches numberings to form objects:
 
 ```javascript
